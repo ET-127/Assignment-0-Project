@@ -5,28 +5,50 @@ import edu.cmu.ri.createlab.terk.robot.finch.Finch;
 public class MainClass {
 	
 	static Finch red  = new Finch();
-	//Finch green  = new Finch();
-	//Finch blue  = new Finch();
-	//Finch yellow  = new Finch();
+	static Finch green  = new Finch();
+	//static Finch blue  = new Finch();
+	//static Finch yellow  = new Finch();
 	static boolean repeat = true;
 	static int score;
 	
-
-	
 	public static void main(String[] args) {
 	
-		//FinchTest();
+		FinchTest();
 		
 		String sequence = "";
 		String i = "";
 		
+		char in = ' ';
+		
 		while(repeat) {
+			
+			i = "";
 		
 			sequence += String.valueOf(GenerateColour());
-			print(sequence);
+			//print(sequence);
 			OutputSequence(sequence);
 			
-			i = ReceiveInput();
+			print("Input Answer");
+			do {
+			
+				in = ' ';
+				
+				while(in == ' ') {
+				
+					in = ReceiveInput();
+					
+				}
+				
+				i += in;
+				
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				}
+			
+			} while (i.length() != sequence.length());
 		
 			if(i.equals(sequence)) {
 				
@@ -41,10 +63,44 @@ public class MainClass {
 				
 			}
 			
+			print("Input was " + i);
+			
 			//print(FinchInput());
 			
 		}
 		
+		
+	}
+	
+	static void FinchTest() {
+		
+		if(red != null) {
+			
+			print("Red is live");
+			red.setLED(255,0,0,1000);
+			
+		}
+		
+		if(green != null) {
+			
+			print("Green is live");
+			green.setLED(0,255,0,1000);
+			
+		}
+		
+		/*if(blue != null) {
+			
+			print("Blue is live");
+			
+		}
+		
+		if(yellow != null) {
+			
+			print("Yellow is live");
+			
+		}*/
+		
+		SetToBlank();
 		
 	}
 	
@@ -55,21 +111,61 @@ public class MainClass {
 	}
 
 	//Will change in the future
-	static String ReceiveInput() {
+	static char ReceiveInput() {
+
+		char c = ' ';
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String n = "";
-		
-		print("Input Answer");
-		
-		try {
+		/*try {
 			n = br.readLine();
 		} catch (IOException e) {
 			
 			e.printStackTrace();
+		}*/
+		
+		if(red.isTapped() || green.isTapped() /*|| blue.isTapped() || yellow.isTapped()*/) {
+			
+			c = FinchInput();
+		
+			if(c != ' ') {
+			
+				printC(c);
+				//SetColour(c,1000);
+			
+			}
+			
 		}
 		
-		return n;		
+		return c;		
+	}
+	
+	static void printC(char c) {
+		
+		switch(c) {
+		
+		
+			case '0':
+				
+				//red
+				print("RED");
+				break;
+				
+				
+			case '1':
+				
+				print("GREEN");
+				break;
+			
+			/*case '2':
+				
+				return "BLUE";
+				
+			case '3':
+				
+				return "YELLOW";*/
+		
+		
+		}
+		
 	}
 	
 	static void OutputSequence(String sequence) {
@@ -88,10 +184,10 @@ public class MainClass {
 	
 	static void SetToBlank() {
 		
-		red.setLED(0,0,0,1000);
-		//blue.setLED(0,0,0,1000);
-		//green.setLED(0,0,0,1000);
-		//yellow.setLED(0,0,0,1000);
+		red.setLED(0,0,0,500);
+		green.setLED(0,0,0,500);
+		/*blue.setLED(0,0,0,1000);
+		yellow.setLED(0,0,0,1000);*/
 		
 	}
 	
@@ -105,19 +201,19 @@ public class MainClass {
 				break;
 				
 			case '1':
-				//green
-				red.setLED(0,255,0,dur);
+				//green.setLED(0,255,0,dur);
+				green.setLED(0,255,0,dur);
 				break;
 			
-			case '2':
-				//blue
-				red.setLED(0,0,255,dur);
+			/*case '2':
+				//blue.setLED(0,0,255,dur);
+				blue.setLED(0,0,255,dur);
 				break;
 				
 			case '3':
-				//yellow
-				red.setLED(255,255,0,dur);
-				break;
+				//yellowsetLED(255,255,0,dur);
+				yellow.setLED(255,255,0,dur);
+				break;*/
 		
 		}
 				
@@ -125,26 +221,38 @@ public class MainClass {
 		
 	}
 	
-	/*static String FinchInput() {
+	static char FinchInput() {
 		
 		if(red.isTapped()) {
 			
-			return "0";
+			return '0';
 			
-		} else {
+		} else if(green.isTapped()) {
 			
-			return "";
+			return '1';
 			
+		}/* else if(blue.isTapped()) {
+			
+			return '2';
+			
+		} else if(yellow.isTapped()) {
+			
+			return '3';
+			
+		}*/ else {
+		
+			return ' ';
+		
 		}
 		
-	}*/
+	}
 	
 	//Generate a random number between 0 and 3 inclusive
 	static int GenerateColour() {
 		
 		Random rand = new Random();
 		
-		int n = rand.nextInt(4);
+		int n = rand.nextInt(2);
 		
 		return n;
 		
