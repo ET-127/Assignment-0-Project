@@ -6,10 +6,11 @@ public class MainClass {
 	
 	static Finch red  = new Finch();
 	static Finch green  = new Finch();
-	//static Finch blue  = new Finch();
+	static Finch blue  = new Finch();
 	//static Finch yellow  = new Finch();
 	static boolean repeat = true;
 	static int score;
+	static boolean hasMovedAway = true;
 	
 	public static void main(String[] args) {
 	
@@ -46,6 +47,12 @@ public class MainClass {
 				} catch (InterruptedException e) {
 					
 					e.printStackTrace();
+				}
+				
+				if(i.codePointAt(i.length() - 1) != sequence.codePointAt(i.length() - 1)) {
+					
+					break;
+					
 				}
 			
 			} while (i.length() != sequence.length());
@@ -88,15 +95,16 @@ public class MainClass {
 			
 		}
 		
-		/*if(blue != null) {
+		if(blue != null) {
 			
 			print("Blue is live");
-			
+			blue.setLED(0,0,255,1000);
 		}
 		
-		if(yellow != null) {
+		/*if(yellow != null) {
 			
 			print("Yellow is live");
+			green.setLED(255,255,0,1000);
 			
 		}*/
 		
@@ -122,7 +130,7 @@ public class MainClass {
 			e.printStackTrace();
 		}*/
 		
-		if(red.isTapped() || green.isTapped() /*|| blue.isTapped() || yellow.isTapped()*/) {
+		if((red.isObstacle() || green.isObstacle() || blue.isTapped() /*|| yellow.isTapped()*/) && hasMovedAway) {
 			
 			c = FinchInput();
 		
@@ -130,8 +138,12 @@ public class MainClass {
 			
 				printC(c);
 				//SetColour(c,1000);
-			
+				hasMovedAway = false;
 			}
+			
+		} else if(!red.isObstacle() && !green.isObstacle() && !blue.isTapped() /*&& yellow.isTapped()*/){
+			
+			hasMovedAway = true;
 			
 		}
 		
@@ -155,11 +167,11 @@ public class MainClass {
 				print("GREEN");
 				break;
 			
-			/*case '2':
+			case '2':
 				
-				return "BLUE";
+				print("BLUE");
 				
-			case '3':
+			/*case '3':
 				
 				return "YELLOW";*/
 		
@@ -184,10 +196,10 @@ public class MainClass {
 	
 	static void SetToBlank() {
 		
-		red.setLED(0,0,0,500);
-		green.setLED(0,0,0,500);
-		/*blue.setLED(0,0,0,1000);
-		yellow.setLED(0,0,0,1000);*/
+		red.setLED(0,0,0,250);
+		green.setLED(0,0,0,250);
+		blue.setLED(0,0,0,250);
+		/*yellow.setLED(0,0,0,1000);*/
 		
 	}
 	
@@ -205,12 +217,12 @@ public class MainClass {
 				green.setLED(0,255,0,dur);
 				break;
 			
-			/*case '2':
+			case '2':
 				//blue.setLED(0,0,255,dur);
 				blue.setLED(0,0,255,dur);
 				break;
 				
-			case '3':
+			/*case '3':
 				//yellowsetLED(255,255,0,dur);
 				yellow.setLED(255,255,0,dur);
 				break;*/
@@ -223,19 +235,19 @@ public class MainClass {
 	
 	static char FinchInput() {
 		
-		if(red.isTapped()) {
+		if(red.isObstacle()) {
 			
 			return '0';
 			
-		} else if(green.isTapped()) {
+		} else if(green.isObstacle()) {
 			
 			return '1';
 			
-		}/* else if(blue.isTapped()) {
+		} else if(blue.isTapped()) {
 			
 			return '2';
 			
-		} else if(yellow.isTapped()) {
+		} /*else if(yellow.isTapped()) {
 			
 			return '3';
 			
@@ -252,7 +264,7 @@ public class MainClass {
 		
 		Random rand = new Random();
 		
-		int n = rand.nextInt(2);
+		int n = rand.nextInt(3);
 		
 		return n;
 		
