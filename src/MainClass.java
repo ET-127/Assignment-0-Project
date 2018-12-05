@@ -14,6 +14,7 @@ public class MainClass {
 	
 	public static void main(String[] args) {
 	
+		//Figure out which finch is which colour
 		FinchTest();
 		
 		String sequence = "";
@@ -24,12 +25,14 @@ public class MainClass {
 		while(repeat) {
 			
 			i = "";
-		
+			
+			//Add a random colour to the end of the sequence
 			sequence += String.valueOf(GenerateColour());
-			//print(sequence);
+			//Output the sequence onto the finches
 			OutputSequence(sequence);
 			
 			print("Input Answer");
+			//Ask for input until the player inputs the wrong or right answer
 			do {
 			
 				in = ' ';
@@ -42,13 +45,15 @@ public class MainClass {
 				
 				i += in;
 				
+				/*//Wait for half a second
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					
 					e.printStackTrace();
-				}
+				}*/
 				
+				//Check if the last colour input is correct
 				if(i.codePointAt(i.length() - 1) != sequence.codePointAt(i.length() - 1)) {
 					
 					break;
@@ -57,6 +62,7 @@ public class MainClass {
 			
 			} while (i.length() != sequence.length());
 		
+			//Check if the whole answer input makes the sequence
 			if(i.equals(sequence)) {
 				
 				score++;
@@ -70,17 +76,18 @@ public class MainClass {
 				
 			}
 			
+			//Print in the console which colour was output
 			print("Input was " + i);
-			
-			//print(FinchInput());
 			
 		}
 		
 		
 	}
 	
+	
 	static void FinchTest() {
 		
+		//This function just ask each finch to flash its colour and make a sound
 		if(red != null) {
 			
 			print("Red is live");
@@ -128,16 +135,11 @@ public class MainClass {
 
 	//Will change in the future
 	static char ReceiveInput() {
-
+		
+		//The character ' ' just means they havent touched anything
 		char c = ' ';
 		
-		/*try {
-			n = br.readLine();
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}*/
-		
+		//Have any of the finches observed an obstacle and has the player already moved their hand away from the last finch they touched?
 		if((red.isObstacle() || green.isObstacle() || blue.isObstacle() || yellow.isObstacle()) && hasMovedAway) {
 			
 			c = FinchInput();
@@ -145,9 +147,8 @@ public class MainClass {
 			if(c != ' ') {
 			
 				printC(c);
-				
-				//SetColour(c,1000);
 				hasMovedAway = false;
+				
 			}
 			
 		} else if(!red.isObstacle() && !green.isObstacle() && !blue.isObstacle() && !yellow.isObstacle()){
@@ -156,13 +157,14 @@ public class MainClass {
 			
 		}
 		
+		//Send back finch the player touched
 		return c;		
 	}
 	
 	static void printC(char c) {
 		
+		//Depending on the finch requested flash its colour
 		switch(c) {
-		
 		
 			case '0':
 				
@@ -206,7 +208,7 @@ public class MainClass {
 		for(int i = 0; i < seq.length;i++) {
 			
 			char n = seq[i];
-			SetColour(n,1000);
+			printC(n);
 			SetToBlank();
 
 		}
@@ -215,6 +217,7 @@ public class MainClass {
 	
 	static void SetToBlank() {
 		
+		//Turn off the lights on all the finches for a fraction of a second(this is for clarity)
 		red.setLED(0,0,0,50);
 		green.setLED(0,0,0,50);
 		blue.setLED(0,0,0,50);
@@ -222,50 +225,7 @@ public class MainClass {
 		
 	}
 	
-	static void SetColour(char id,int dur) {
-		
-		switch(id) {
-		
-			case '0':
-				//red
-				red.buzz(200, 1000);
-				red.setLED(255,0,0,dur);
-				
-				break;
-				
-			case '1':
-				//green.setLED(0,255,0,dur);
-				green.buzz(300, 1000);
-				green.setLED(0,255,0,dur);
-				
-				break;
-			
-			case '2':
-				//blue.setLED(0,0,255,dur);
-				blue.buzz(400, 1000);
-				blue.setLED(0,0,255,dur);
-				
-				
-				break;
-				
-			case '3':
-				//yellowsetLED(255,255,0,dur);
-				yellow.buzz(500, 1000);
-				yellow.setLED(255,255,0,dur);
-				
-				break;
-		
-		}
-				
-			
-		
-	}
-	
-	void indicate(int id,int dur) {
-		
-		
-	}
-	
+	//Checks if an of the finches have detected an obstacle in front of them
 	static char FinchInput() {
 		
 		if(red.isObstacle()) {
